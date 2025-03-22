@@ -10,64 +10,103 @@ class ChatMessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.centerRight,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-        padding: const EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          color: message.isUser
-              ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
-              : Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  _formatTimestamp(message.timestamp),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-                if (!message.isUser)
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        children: [
+          if (!message.isUser)
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              child: const Icon(Icons.smart_toy, size: 18),
+            ),
+          const SizedBox(width: 8),
+          Flexible(
+            
+            child: Container(
+              // width: MediaQuery.of(context).size.width - 100, // Adjust this value as needed
+              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding: const EdgeInsets.all(12.0),
+              decoration: BoxDecoration(
+                color: message.isUser
+                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
+                    : Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12.0),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (message.hasImage)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(8.0),
+                      child: Image.file(
+                        File(message.imagePath!),
+                        height: 200,
+                        width: 200,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  if (message.type == MessageType.text ||
+                      message.type == MessageType.image)
+                    Text(
+                      message.content,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                  if (message.hasAnalysis)
+                    _buildAnalysisCard(context, message.analysis!),
+                  const SizedBox(height: 4.0),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      IconButton(
-                        icon: const Icon(Icons.edit, size: 16),
-                        onPressed: () {
-                          // TODO: Implement edit functionality
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, size: 16),
-                        onPressed: () {
-                          // TODO: Implement delete functionality
-                        },
-                      ),
+                      if (!message.isUser) ...[
+                        TextButton.icon(
+                          icon: const Icon(
+                            Icons.edit,
+                            size: 12,
+                          ),
+                          label: Text(
+                            "Edit",
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                          onPressed: () {
+                            // TODO: Implement delete functionality
+                          },
+                        ),
+                        const SizedBox(width: 4),
+                        TextButton.icon(
+                          icon: const Icon(
+                            Icons.delete,
+                            size: 12,
+                          ),
+                          label: Text(
+                            "Delete",
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                          onPressed: () {
+                            // TODO: Implement delete functionality
+                          },
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          _formatTimestamp(message.timestamp),
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
                     ],
                   ),
-              ],
+                ],
+              ),
             ),
-            if (message.hasImage)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.file(
-                  File(message.imagePath!),
-                  height: 200,
-                  width: 200,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            if (message.type == MessageType.text || message.type == MessageType.image)
-              Text(
-                message.content,
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-            if (message.hasAnalysis) _buildAnalysisCard(context, message.analysis!),
-          ],
-        ),
+          ),
+          if (message.isUser)
+            const SizedBox(width: 8),
+          if (message.isUser)
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: const Icon(Icons.person, size: 18),
+            ),
+        ],
       ),
     );
   }
@@ -155,7 +194,8 @@ class ChatMessageBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildMicroList(BuildContext context, String title, Map<String, String> items) {
+  Widget _buildMicroList(
+      BuildContext context, String title, Map<String, String> items) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -181,6 +221,8 @@ class ChatMessageBubble extends StatelessWidget {
   }
 
   String _formatTimestamp(DateTime timestamp) {
-    return '${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}';
+    final hour = timestamp.hour % 12 == 0 ? 12 : timestamp.hour % 12;
+    final period = timestamp.hour < 12 ? 'am' : 'pm';
+    return '${hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')} $period';
   }
 }

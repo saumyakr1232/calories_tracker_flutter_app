@@ -103,8 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
           WeekCalendar(),
           const SizedBox(height: 8),
           CaloriesAndMacrosWidget(),
-          
-
+          const SizedBox(height: 4),
           Expanded(
             child: ListView.builder(
               reverse: true,
