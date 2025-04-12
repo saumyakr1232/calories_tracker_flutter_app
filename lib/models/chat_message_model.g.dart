@@ -26,7 +26,7 @@ Map<String, dynamic> _$ChatMessageModelToJson(_ChatMessageModel instance) =>
       'content': instance.content,
       'isUser': instance.isUser,
       'timestamp': instance.timestamp.toIso8601String(),
-      'analysis': instance.analysis,
+      'analysis': instance.analysis?.toJson(),
       'imagePath': instance.imagePath,
     };
 

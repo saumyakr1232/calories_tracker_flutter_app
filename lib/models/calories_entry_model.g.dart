@@ -19,7 +19,7 @@ Map<String, dynamic> _$CaloriesEntryModelToJson(_CaloriesEntryModel instance) =>
       'foodCalories': instance.foodCalories,
       'exerciseCalories': instance.exerciseCalories,
       'targetCalories': instance.targetCalories,
-      'macros': instance.macros,
+      'macros': instance.macros.toJson(),
     };
 
 _MacrosModel _$MacrosModelFromJson(Map<String, dynamic> json) => _MacrosModel(

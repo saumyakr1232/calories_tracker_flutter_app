@@ -6,7 +6,7 @@ part of 'chat_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$isLoadingHash() => r'32359d429ace8fe743a061bb0da60bb0d59120d2';
+String _$isLoadingHash() => r'cfffd4a7bc865f7bac2260f5f2179766099eb31d';
 
 /// See also [isLoading].
 @ProviderFor(isLoading)
@@ -39,11 +39,11 @@ final chatLoadingProvider = AutoDisposeProvider<bool>.internal(
 // ignore: unused_element
 typedef ChatLoadingRef = AutoDisposeProviderRef<bool>;
 String _$chatMessagesNotifierHash() =>
-    r'7013d3c9616b68f74f7af5d0a95cfc757a012584';
+    r'677b6c8b00ffe22f157bf57442a047d0df6337d3';
 
 /// See also [ChatMessagesNotifier].
 @ProviderFor(ChatMessagesNotifier)
-final chatMessagesNotifierProvider = AutoDisposeNotifierProvider<
+final chatMessagesNotifierProvider = AutoDisposeAsyncNotifierProvider<
     ChatMessagesNotifier, List<ChatMessageModel>>.internal(
   ChatMessagesNotifier.new,
   name: r'chatMessagesNotifierProvider',
@@ -54,6 +54,7 @@ final chatMessagesNotifierProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$ChatMessagesNotifier = AutoDisposeNotifier<List<ChatMessageModel>>;
+typedef _$ChatMessagesNotifier
+    = AutoDisposeAsyncNotifier<List<ChatMessageModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

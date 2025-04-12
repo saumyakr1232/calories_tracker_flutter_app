@@ -22,8 +22,8 @@ Map<String, dynamic> _$FoodAnalysisToJson(FoodAnalysis instance) =>
     <String, dynamic>{
       'description': instance.description,
       'calories': instance.calories,
-      'macronutrients': instance.macronutrients,
-      'micronutrients': instance.micronutrients,
+      'macronutrients': instance.macronutrients.toJson(),
+      'micronutrients': instance.micronutrients.toJson(),
       'timestamp': instance.timestamp?.toIso8601String(),
     };
 

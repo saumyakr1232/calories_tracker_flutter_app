@@ -12,7 +12,7 @@ class ChatScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final messages = ref.watch(chatMessagesNotifierProvider);
+    final messagesAsyncValue = ref.watch(chatMessagesNotifierProvider);
     final isLoading = ref.watch(chatLoadingProvider);
     final textController = TextEditingController();
     final imagePicker = ImagePicker();
@@ -62,11 +62,26 @@ class ChatScreen extends ConsumerWidget {
           const CaloriesAndMacrosWidget(),
           const SizedBox(height: 4),
           Expanded(
-            child: ListView.builder(
-              reverse: true,
-              itemCount: messages.length,
-              itemBuilder: (context, index) => ChatMessageBubble(
-                message: messages[index],
+            child: messagesAsyncValue.when(
+              data: (messages) {
+                if (messages.isEmpty) {
+                  return const Center(
+                    child: Text('No messages yet. Start chatting!'),
+                  );
+                }
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: messages.length,
+                  itemBuilder: (context, index) => ChatMessageBubble(
+                    message: messages[index],
+                  ),
+                );
+              },
+              loading: () => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              error: (error, stackTrace) => Center(
+                child: Text('Error: $error'),
               ),
             ),
           ),
