@@ -4,7 +4,7 @@ part 'calories_entry_model.freezed.dart';
 part 'calories_entry_model.g.dart';
 
 @freezed
-class CaloriesEntryModel with _$CaloriesEntryModel {
+abstract class CaloriesEntryModel with _$CaloriesEntryModel {
   const factory CaloriesEntryModel({
     required int foodCalories,
     required int exerciseCalories,
@@ -24,7 +24,7 @@ class CaloriesEntryModel with _$CaloriesEntryModel {
 }
 
 @freezed
-class MacrosModel with _$MacrosModel {
+abstract class MacrosModel with _$MacrosModel {
   const factory MacrosModel({
     required int consumedCarbs,
     required int targetCarbs,

@@ -121,7 +121,6 @@ class _$CaloriesEntryModelCopyWithImpl<$Res>
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _CaloriesEntryModel implements CaloriesEntryModel {
   const _CaloriesEntryModel(
@@ -361,7 +360,6 @@ class _$MacrosModelCopyWithImpl<$Res> implements $MacrosModelCopyWith<$Res> {
 }
 
 /// @nodoc
-
 @JsonSerializable()
 class _MacrosModel implements MacrosModel {
   const _MacrosModel(

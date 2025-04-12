@@ -7,7 +7,7 @@ part 'chat_message_model.g.dart';
 enum MessageType { text, image, analysis }
 
 @freezed
-class ChatMessageModel with _$ChatMessageModel {
+abstract class ChatMessageModel with _$ChatMessageModel {
   const factory ChatMessageModel({
     required String id,
     required MessageType type,
