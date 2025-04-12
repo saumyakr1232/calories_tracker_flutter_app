@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/calories_provider.dart';
 
-class CaloriesAndMacrosWidget extends StatelessWidget {
+class CaloriesAndMacrosWidget extends ConsumerWidget {
   const CaloriesAndMacrosWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final caloriesEntry = ref.watch(caloriesEntryNotifierProvider);
+    final remainingCals = ref.watch(remainingCaloriesProvider);
     final sw = MediaQuery.of(context).size.width;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,7 +49,7 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "400",
+                        "${caloriesEntry.foodCalories}",
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
@@ -58,7 +62,7 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "0",
+                        "${caloriesEntry.exerciseCalories}",
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(
@@ -71,7 +75,7 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "2000",
+                        "$remainingCals",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 12,
@@ -123,7 +127,7 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "0/250",
+                        "${caloriesEntry.macros.consumedCarbs}/${caloriesEntry.macros.targetCarbs}",
                         style: TextStyle(
                           fontSize: 12,
                         ),
@@ -138,13 +142,13 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "40/125",
+                        "${caloriesEntry.macros.consumedProtein}/${caloriesEntry.macros.targetProtein}",
                         style: TextStyle(
                           fontSize: 12,
                         ),
                       ),
                       Text(
-                        "Protien (g)",
+                        "Protein (g)",
                         style: TextStyle(fontSize: 10),
                       ),
                     ],
@@ -153,7 +157,7 @@ class CaloriesAndMacrosWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "24/56",
+                        "${caloriesEntry.macros.consumedFat}/${caloriesEntry.macros.targetFat}",
                         style: TextStyle(fontSize: 12),
                       ),
                       Text(

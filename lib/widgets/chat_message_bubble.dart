@@ -1,10 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../models/chat_message.dart';
+import '../models/chat_message_model.dart';
 import '../models/food_analysis.dart';
 
 class ChatMessageBubble extends StatelessWidget {
-  final ChatMessage message;
+  final ChatMessageModel message;
 
   const ChatMessageBubble({super.key, required this.message});
 
@@ -14,7 +14,8 @@ class ChatMessageBubble extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            message.isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!message.isUser)
             CircleAvatar(
@@ -23,21 +24,28 @@ class ChatMessageBubble extends StatelessWidget {
             ),
           const SizedBox(width: 8),
           Flexible(
-            
             child: Container(
               // width: MediaQuery.of(context).size.width - 100, // Adjust this value as needed
-              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              margin:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
                 color: message.isUser
-                    ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
-                    : Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
+                    ? Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1)
+                    : Theme.of(context)
+                        .colorScheme
+                        .secondary
+                        .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (message.hasImage)
+                  if (message.imagePath != null &&
+                      message.type == MessageType.image)
                     ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
                       child: Image.file(
@@ -53,7 +61,7 @@ class ChatMessageBubble extends StatelessWidget {
                       message.content,
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                  if (message.hasAnalysis)
+                  if (message.analysis != null)
                     _buildAnalysisCard(context, message.analysis!),
                   const SizedBox(height: 4.0),
                   Row(
@@ -99,8 +107,7 @@ class ChatMessageBubble extends StatelessWidget {
               ),
             ),
           ),
-          if (message.isUser)
-            const SizedBox(width: 8),
+          if (message.isUser) const SizedBox(width: 8),
           if (message.isUser)
             CircleAvatar(
               backgroundColor: Theme.of(context).colorScheme.primary,
