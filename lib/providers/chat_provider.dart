@@ -16,84 +16,125 @@ class ChatMessagesNotifier extends _$ChatMessagesNotifier {
 
   @override
   Future<List<ChatMessageModel>> build() async {
+    debugPrint('ChatMessagesNotifier: build method called');
     _foodService = FoodService();
     _chatRepository = ChatRepository();
 
     // Load chat history from Firestore if user is logged in
     if (_chatRepository.isUserLoggedIn) {
+      debugPrint(
+          'ChatMessagesNotifier: User is logged in, loading chat history');
       try {
-        return await _chatRepository.getChatHistory();
+        final messages = await _chatRepository.getChatHistory();
+        debugPrint(
+            'ChatMessagesNotifier: Loaded ${messages.length} messages from history');
+        return messages;
       } catch (e) {
+        debugPrint('ChatMessagesNotifier: Error loading chat history: $e');
         // If there's an error loading from Firestore, return empty list
         return [];
       }
     }
+    debugPrint(
+        'ChatMessagesNotifier: User not logged in, returning empty list');
     return [];
   }
 
   bool get isLoading => _isLoading;
 
   Future<void> addTextMessage(String text) async {
+    debugPrint('ChatMessagesNotifier: addTextMessage called with: "$text"');
     if (text.isEmpty) return;
 
     final message = ChatMessageModel.text(text);
+    debugPrint(
+        'ChatMessagesNotifier: Created text message with ID: ${message.id}');
     state = AsyncValue.data([message, ...state.valueOrNull ?? []]);
+    debugPrint('ChatMessagesNotifier: Updated state with new text message');
 
     // Save to Firestore if user is logged in
     if (_chatRepository.isUserLoggedIn) {
+      debugPrint('ChatMessagesNotifier: Saving text message to Firestore');
       try {
         await _chatRepository.saveChatMessage(message);
+        debugPrint(
+            'ChatMessagesNotifier: Successfully saved text message to Firestore');
       } catch (e) {
-        debugPrint('Error saving user text message to Firestore: $e');
+        debugPrint(
+            'ChatMessagesNotifier: Error saving user text message to Firestore: $e');
         // Continue even if Firestore save fails
       }
     }
   }
 
   Future<void> analyzeTextMessage(String text) async {
+    debugPrint('ChatMessagesNotifier: analyzeTextMessage called with: "$text"');
     if (text.isEmpty) return;
 
     // Add user message
     await addTextMessage(text);
     _isLoading = true;
+    debugPrint('ChatMessagesNotifier: Set loading state to true');
     ref.notifyListeners();
 
     try {
+      debugPrint('ChatMessagesNotifier: Calling food service to analyze text');
       final analysis = await _foodService.analyzeFoodText(text);
+      debugPrint(
+          'ChatMessagesNotifier: Received analysis result: ${analysis.toString()}');
       final analysisMessage = ChatMessageModel.analysis(analysis);
+      debugPrint(
+          'ChatMessagesNotifier: Created analysis message with ID: ${analysisMessage.id}');
       state = AsyncValue.data([analysisMessage, ...state.valueOrNull ?? []]);
+      debugPrint(
+          'ChatMessagesNotifier: Updated state with new analysis message');
 
       // Save analysis message to Firestore if user is logged in
       if (_chatRepository.isUserLoggedIn) {
+        debugPrint(
+            'ChatMessagesNotifier: Saving analysis message to Firestore');
         try {
           await _chatRepository.saveChatMessage(analysisMessage);
+          debugPrint(
+              'ChatMessagesNotifier: Successfully saved analysis message to Firestore');
         } catch (e) {
-          debugPrint('Error saving analysis message to Firestore: $e');
+          debugPrint(
+              'ChatMessagesNotifier: Error saving analysis message to Firestore: $e');
           // Continue even if Firestore save fails
         }
       }
     } catch (e) {
-      debugPrint('Error analyzing text message: $e');
+      debugPrint('ChatMessagesNotifier: Error analyzing text message: $e');
       // Handle error
     } finally {
       _isLoading = false;
+      debugPrint('ChatMessagesNotifier: Set loading state to false');
       ref.notifyListeners();
     }
   }
 
   Future<void> analyzeImageMessage(File image) async {
+    debugPrint(
+        'ChatMessagesNotifier: analyzeImageMessage called with image: ${image.path}');
     if (image.path.isEmpty) return;
 
     // Add user image message
     final imageMessage = ChatMessageModel.image(image.path);
+    debugPrint(
+        'ChatMessagesNotifier: Created image message with ID: ${imageMessage.id}');
     state = AsyncValue.data([imageMessage, ...state.valueOrNull ?? []]);
+    debugPrint('ChatMessagesNotifier: Updated state with new image message');
 
     // Save image message to Firestore if user is logged in
     if (_chatRepository.isUserLoggedIn) {
+      debugPrint('ChatMessagesNotifier: Saving image message to Firestore');
       try {
         await _chatRepository.saveChatMessage(imageMessage);
+        debugPrint(
+            'ChatMessagesNotifier: Successfully saved image message to Firestore');
       } catch (e) {
-        debugPrint('Error saving user image message to Firestore: $e');
+        debugPrint(
+            'ChatMessagesNotifier: Error saving user image message to Firestore: $e');
         // Continue even if Firestore save fails
       }
     }

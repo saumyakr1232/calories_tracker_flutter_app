@@ -39,7 +39,7 @@ final chatLoadingProvider = AutoDisposeProvider<bool>.internal(
 // ignore: unused_element
 typedef ChatLoadingRef = AutoDisposeProviderRef<bool>;
 String _$chatMessagesNotifierHash() =>
-    r'677b6c8b00ffe22f157bf57442a047d0df6337d3';
+    r'fb1b6f1b69fec92ae9f9975ba5a0a1ea118476ed';
 
 /// See also [ChatMessagesNotifier].
 @ProviderFor(ChatMessagesNotifier)

@@ -7,44 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1016859547397:android:cd5862dbba56c58f9bc96c",
-        "android_client_info": {
-          "package_name": "com.saum"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgqJZWMeE11jelwhmQdFx9Kl0i7rYK_Ik"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:1016859547397:android:1e3d8f4ac3abebed9bc96c",
-        "android_client_info": {
-          "package_name": "com.saumya.calories_tracker_flutter_app"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCgqJZWMeE11jelwhmQdFx9Kl0i7rYK_Ik"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:1016859547397:android:12f8ffd6f83b7df39bc96c",
         "android_client_info": {
           "package_name": "dev.saumya.calories_tracker_flutter_app"

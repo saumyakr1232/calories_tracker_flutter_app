@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import '../providers/selected_date_provider.dart';
 
-class WeekCalendar extends StatefulWidget {
+class WeekCalendar extends ConsumerStatefulWidget {
   const WeekCalendar({super.key});
 
   @override
   WeekCalendarState createState() => WeekCalendarState();
 }
 
-class WeekCalendarState extends State<WeekCalendar> {
-  DateTime _selectedDate = DateTime.now();
+class WeekCalendarState extends ConsumerState<WeekCalendar> {
+  late DateTime _selectedDate;
   final DateTime _today = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDate = ref.read(selectedDateNotifierProvider);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,17 +38,24 @@ class WeekCalendarState extends State<WeekCalendar> {
           onTap: () {
             setState(() {
               _selectedDate = day;
+              // Update the selected date in the provider
+              ref
+                  .read(selectedDateNotifierProvider.notifier)
+                  .updateSelectedDate(day);
             });
+
+            debugPrint("Selected Date: ${_selectedDate.toString()}");
           },
           child: Container(
-            width: (size.width - 32 )/ 7 , 
-            height: (size.width - 32) / 7 ,
+            width: (size.width - 32) / 7,
+            height: (size.width - 32) / 7,
             decoration: BoxDecoration(
               color: isToday
                   ? (isSelected ? Colors.red.shade100 : Colors.green.shade100)
                   : Colors.transparent,
-              border:
-                  isSelected ? Border.all(color: Colors.grey.shade300, width: 2) : null,
+              border: isSelected
+                  ? Border.all(color: Colors.grey.shade300, width: 2)
+                  : null,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
