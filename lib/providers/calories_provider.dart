@@ -119,28 +119,32 @@ class CaloriesEntryNotifier extends _$CaloriesEntryNotifier {
         'CaloriesEntryNotifier: Updated macros - carbs: ${macros.consumedCarbs}/${macros.targetCarbs}, protein: ${macros.consumedProtein}/${macros.targetProtein}, fat: ${macros.consumedFat}/${macros.targetFat}');
   }
 
-  void addFoodAnalysis(FoodAnalysis analysis) {
+  Future addFoodAnalysis(FoodAnalysis analysis) async {
     debugPrint(
         'CaloriesEntryNotifier: addFoodAnalysis called with ${analysis.description}, calories: ${analysis.calories}');
 
     // Ensure state has data before proceeding
     if (state.value == null) {
-      debugPrint('CaloriesEntryNotifier: State value is null, cannot add food analysis.');
+      debugPrint(
+          'CaloriesEntryNotifier: State value is null, cannot add food analysis.');
       return;
     }
 
     final currentState = state.value!;
 
     // Update food calories
-    final newFoodCalories = currentState.foodCalories + analysis.calories.toInt();
+    final newFoodCalories =
+        currentState.foodCalories + analysis.calories.toInt();
     debugPrint(
         'CaloriesEntryNotifier: Updating food calories from ${currentState.foodCalories} to $newFoodCalories');
 
     // Update macros
     final macros = analysis.macronutrients;
     final newMacros = currentState.macros.copyWith(
-      consumedCarbs: currentState.macros.consumedCarbs + macros.carbohydrates.toInt(),
-      consumedProtein: currentState.macros.consumedProtein + macros.protein.toInt(),
+      consumedCarbs:
+          currentState.macros.consumedCarbs + macros.carbohydrates.toInt(),
+      consumedProtein:
+          currentState.macros.consumedProtein + macros.protein.toInt(),
       consumedFat: currentState.macros.consumedFat + macros.fat.toInt(),
     );
     debugPrint(
@@ -155,7 +159,12 @@ class CaloriesEntryNotifier extends _$CaloriesEntryNotifier {
 
     // Save the food analysis to the repository
     debugPrint('CaloriesEntryNotifier: Saving food analysis to repository');
-    ref.read(foodLogRepositoryProvider).saveFoodLog(analysis);
+    await ref.read(foodLogRepositoryProvider).saveFoodLog(analysis);
+
+    // Invalidate the provider to refetch logs for the current date
+    ref.invalidate(selectedDateFoodLogsProvider);
+    debugPrint(
+        'CaloriesEntryNotifier: Invalidated selectedDateFoodLogsProvider');
   }
 
   // This method is now replaced by _calculateInitialModel and direct updates
@@ -177,7 +186,8 @@ int remainingCalories(Ref ref) {
     },
     loading: () => 0, // Or some default/loading state value
     error: (err, stack) {
-      debugPrint('remainingCalories: Error calculating remaining calories: $err');
+      debugPrint(
+          'remainingCalories: Error calculating remaining calories: $err');
       return 0; // Or handle error appropriately
     },
   );

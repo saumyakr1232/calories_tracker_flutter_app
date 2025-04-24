@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../providers/selected_date_provider.dart';
+import '../providers/calories_provider.dart'; // Import calories provider
 
 class WeekCalendar extends ConsumerStatefulWidget {
   const WeekCalendar({super.key});
@@ -22,6 +23,8 @@ class WeekCalendarState extends ConsumerState<WeekCalendar> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch the calories entry for the selected date
+    final caloriesEntryAsync = ref.watch(caloriesEntryNotifierProvider);
     final size = MediaQuery.of(context).size;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -50,9 +53,33 @@ class WeekCalendarState extends ConsumerState<WeekCalendar> {
             width: (size.width - 32) / 7,
             height: (size.width - 32) / 7,
             decoration: BoxDecoration(
-              color: isToday
-                  ? (isSelected ? Colors.red.shade100 : Colors.green.shade100)
-                  : Colors.transparent,
+              color: caloriesEntryAsync.when(
+                data: (caloriesEntry) {
+                  // Determine color based on calories, only for the selected date
+                  if (isSelected) {
+                    bool underLimit = caloriesEntry.foodCalories <
+                        caloriesEntry.targetCalories;
+                    return underLimit
+                        ? Colors.green.shade100
+                        : Colors.red.shade100;
+                  } else {
+                    // Keep original logic for non-selected dates (today vs others)
+                    return isToday
+                        ? Colors.blue.shade50
+                        : Colors.transparent; // Example: Blue tint for today
+                  }
+                },
+                loading: () => isSelected
+                    ? Colors.grey.shade200
+                    : (isToday
+                        ? Colors.blue.shade50
+                        : Colors.transparent), // Loading state color
+                error: (err, stack) => isSelected
+                    ? Colors.orange.shade100
+                    : (isToday
+                        ? Colors.blue.shade50
+                        : Colors.transparent), // Error state color
+              ),
               border: isSelected
                   ? Border.all(color: Colors.grey.shade300, width: 2)
                   : null,
@@ -82,5 +109,8 @@ class WeekCalendarState extends ConsumerState<WeekCalendar> {
 }
 
 void main() => runApp(MaterialApp(
-      home: WeekCalendar(),
+      // The main function here is likely for testing/example purposes
+      // and might not be needed in the final app structure.
+      // It requires a ProviderScope to run.
+      home: ProviderScope(child: Scaffold(body: Center(child: WeekCalendar()))),
     ));

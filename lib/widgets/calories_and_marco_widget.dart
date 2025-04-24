@@ -9,7 +9,8 @@ class CaloriesAndMacrosWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     debugPrint("CaloriesAndMacrosWidget: build method called");
     final caloriesEntryAsync = ref.watch(caloriesEntryNotifierProvider);
-    debugPrint("CaloriesAndMacrosWidget: caloriesEntryAsync = $caloriesEntryAsync");
+    debugPrint(
+        "CaloriesAndMacrosWidget: caloriesEntryAsync = $caloriesEntryAsync");
     final remainingCals = ref.watch(remainingCaloriesProvider);
     debugPrint("CaloriesAndMacrosWidget: remainingCals = $remainingCals");
     final sw = MediaQuery.of(context).size.width;
